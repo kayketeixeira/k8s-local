@@ -1,0 +1,20 @@
+auth:
+  username: datadog
+  password: datadog
+metrics:
+  enabled: true
+podAnnotations:
+  ad.datadoghq.com/rabbitmq.logs: '[{"source":"rabbitmq","service":"rabbitmq"}]'
+  ad.datadoghq.com/rabbitmq.checks: |
+    {
+      "rabbitmq": {
+        "init_config": {},
+        "instances": [
+          {
+            "rabbitmq_api_url": "http://%%host%%:15672/api/",
+            "username": "datadog",
+            "password": "datadog"
+          }
+        ]
+      }
+    }

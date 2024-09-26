@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-app
+  namespace: default
+  labels:
+    tags.datadoghq.com/env: "local" # Unified service tag - Deployment Env tag
+    tags.datadoghq.com/service: "python-app" # Unified service tag - Deployment Service tag
+    tags.datadoghq.com/version: "1.0" # Unified service tag - Deployment Version tag
+spec:
+  selector:
+    matchLabels:
+      app: python-app
+  template:
+    metadata:
+      annotations:
+        admission.datadoghq.com/python-lib.version: "v2.8.5"
+        ad.datadoghq.com/python.logs: '[{"source":"python","service":"python-app"}]'
+      labels:
+        tags.datadoghq.com/env: "local" # Unified service tag - Pod Env tag
+        tags.datadoghq.com/service: "python-app" # Unified service tag - Pod Service tag
+        tags.datadoghq.com/version: "1.1" # Unified service tag - Pod Version tag
+        admission.datadoghq.com/enabled: "true" # Enable Admission Controller to mutate new pods part of this deployment
+        app: python-app
+    spec:
+      containers:
+      - name: python
+        image: kayketeixeira/python-app:v0.0.1
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 200m
+            memory: 64Mi
+          limits:
+            cpu: 300m
+            memory: 128Mi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: python-app
+  namespace: default
+spec:
+  type: LoadBalancer
+  selector:
+    app: python-app
+  ports:
+  - name: http
+    port: 8082
+    targetPort: 80

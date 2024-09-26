@@ -1,0 +1,4 @@
+# Helm stuff
+*.tgz
+requirements.lock
+Chart.lock

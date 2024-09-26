@@ -1,0 +1,12 @@
+apiVersion: v2
+name: datadog
+description: Helm Chart para visualizar os dados implantados no kubernetes no próprio datadog.
+version: 0.0.1
+maintainers:
+  - name: kayketeixeira
+    email: kayketeixeira@gmail.com
+dependencies:
+  - name: datadog
+    alias: datadog-agent
+    version: 3.65.2
+    repository: https://helm.datadoghq.com

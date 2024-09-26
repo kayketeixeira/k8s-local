@@ -1,0 +1,42 @@
+datadog-agent:
+  fullnameOverride: datadog
+  datadog:
+    tags: 
+    - "cost-center:teste1234567890"
+    nodeLabelsAsTags: {"*":"%%label%%"}
+    podLabelsAsTags: {"*":"%%label%%"}
+    apiKey: ${DATADOG_API_KEY}
+    logLevel: WARN
+    clusterName: ""
+    kubelet:
+      tlsVerify: false
+    logs:
+      enabled: true
+      containerCollectAll: true
+      autoMultiLineDetection: true
+    apm:
+      instrumentation:
+        enabled: true
+      portEnabled: true
+    processAgent:
+      processCollection: true
+      stripProcessArguments: true
+  clusterAgent:
+    admissionController:
+      enabled: true
+      agentSidecarInjection:
+        enabled: true
+    env:
+      - name: DD_CLUSTER_AGENT_ALLOW_LEGACY_TLS
+        value: true
+    podAnnotations:
+      ad.datadoghq.com/cluster-agent.logs: '[{"source": "cluster-agent", "service": "datadog-cluster-agent"}]'
+  clusterChecksRunner:
+    enabled: true
+    podAnnotations:
+      ad.datadoghq.com/agent.logs: '[{"source": "datadog-agent-cluster-worker", "service": "datadog-agent-cluster-worker"}]'
+  agents:
+    podAnnotations:
+      ad.datadoghq.com/agent.logs: '[{"source": "agent", "service": "datadog-agent"}]'
+      ad.datadoghq.com/trace-agent.logs: '[{"source": "trace-agent", "service": "datadog-trace-agent"}]'
+      ad.datadoghq.com/process-agent.logs: '[{"source": "process-agent", "service": "datadog-process-agent"}]'
