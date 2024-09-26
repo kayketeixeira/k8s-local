@@ -1,4 +1,5 @@
-# Local environment to test applications and integrations on a local cluster K8S.
+# Local environment cluster K8S.
+## The objective is test applications and integrations on local cluster k8s and send data to datadog.
 
 ## What will be done
 - Create a K8S runtime with 3 local machines.
