@@ -46,7 +46,7 @@ install-java-app:
 install-python-app:
 	kubectl apply -f ./applications/python/python.yaml
 
-install-dependencies: install-metrics-server install-datadog-agent install-apache install-rabbitmq install-dotnet-app install-java-app install-python-app
+install-dependencies: install-metrics-server install-datadog-agent install-rabbitmq install-dotnet-app install-java-app install-python-app
 
 .create-cluster:
     # Check if the cluster exists
