@@ -26,6 +26,28 @@ install-metrics-server:
 	helm upgrade --install metrics-server metrics-server/metrics-server --namespace kube-system --set args={--kubelet-insecure-tls}
 	kubectl rollout -n kube-system status deployment metrics-server
 
+install-ingress-nginx:
+	helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+	helm upgrade --install -n kube-system ingress-nginx ingress-nginx/ingress-nginx
+	kubectl rollout -n kube-system status deployment ingress-nginx-controller
+
+install-argo-rollout:
+	helm repo add argo https://argoproj.github.io/argo-helm
+	helm upgrade --install argo-rollouts argo/argo-rollouts --namespace argo-rollouts --create-namespace
+
+uninstall-argo-rollout:
+	helm uninstall argo-rollouts argo/argo-rollouts --namespace argo-rollouts
+
+install-argocd:
+	helm repo add argo https://argoproj.github.io/argo-helm
+	helm upgrade --install argo-cd argo/argo-cd --namespace argocd --create-namespace
+
+uninstall-argocd:
+	helm uninstall argo-cd argo/argo-cd --namespace argocd
+
+get-argocd-password:
+	kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+
 install-datadog-agent:
 ifndef DATADOG_API_KEY
 	$(error DATADOG_API_KEY is undefined)
@@ -40,13 +62,7 @@ install-rabbitmq:
 install-dotnet-app:
 	kubectl apply -f ./applications/dotnet/dotnet.yaml
 
-install-java-app:
-	kubectl apply -f ./applications/java/java.yaml
-
-install-python-app:
-	kubectl apply -f ./applications/python/python.yaml
-
-install-dependencies: install-metrics-server install-datadog-agent install-rabbitmq install-dotnet-app install-java-app install-python-app
+install-dependencies: install-metrics-server install-ingress-nginx install-argo-rollout install-argocd install-datadog-agent install-rabbitmq install-dotnet-app get-argocd-password
 
 .create-cluster:
     # Check if the cluster exists
